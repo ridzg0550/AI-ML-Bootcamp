@@ -81,17 +81,28 @@ pip
 🌟Required Dependencies
 
 sentence-transformers==2.2.2
+
 faiss-cpu==1.7.4
+
 spacy==3.5.0
+
 groq==0.4.0
+
 numpy==1.24.3
+
 python-dotenv==1.0.0
 
 🌟How To Run
-1.paste the colab code
-2.paste the API key in the mentioned place
-3.run
-4.give inputs as a player and enjoy the game!
+
+1.install dependencies
+
+2.run this command on terminal to set your API key-
+command-export GROQ_API_KEY=‘your_api_key’
+
+3.run main.py file
+
+4.enjoy your game!
+
 
 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
