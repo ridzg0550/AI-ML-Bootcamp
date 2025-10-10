@@ -103,6 +103,8 @@ command-export GROQ_API_KEY=‘your_api_key’
 
 4.enjoy your game!
 
+SAMPLE VIDEO LINK:- https://drive.google.com/file/d/1lzY8X3Ukoo5yfsI393hA2RkdWIUhcGKE/view?usp=sharing
+
 
 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
