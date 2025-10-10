@@ -1,4 +1,4 @@
-Neuromorphic Memory Architecture for Interactive Narrative Generation
+🌟Neuromorphic Memory Architecture for Interactive Narrative Generation
 
 A biologically-inspired memory system for long-horizon interactive storytelling in text-based RPGs. This architecture integrates neuromorphic episodic memory with transformer-based LLMs to maintain coherent narratives across extended conversations spanning multiple sessions.
 
@@ -103,7 +103,9 @@ command-export GROQ_API_KEY=‘your_api_key’
 
 4.enjoy your game!
 
-SAMPLE VIDEO LINK:- https://drive.google.com/file/d/1lzY8X3Ukoo5yfsI393hA2RkdWIUhcGKE/view?usp=sharing
+SAMPLE VIDEO LINK 1:- https://drive.google.com/file/d/1lzY8X3Ukoo5yfsI393hA2RkdWIUhcGKE/view?usp=sharing
+
+SAMPLE VIDEO LINK 2:-https://drive.google.com/file/d/1C1Xg_7TE7WVot6qpEWD1_niWxcJOD4c_/view?usp=sharing
 
 
 📄 License
