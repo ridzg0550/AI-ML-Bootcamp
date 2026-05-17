@@ -60,7 +60,9 @@ app.include_router(router)
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
 
 if os.path.isdir(FRONTEND_DIR):
-    app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="assets")
+    assets_dir = os.path.join(FRONTEND_DIR, "assets")
+    os.makedirs(assets_dir, exist_ok=True)
+    app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
 
     @app.get("/")
     async def serve_frontend():
