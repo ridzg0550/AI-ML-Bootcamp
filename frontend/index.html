@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DungeonBrain++ — AI Dungeon Master with neuromorphic memory architecture for persistent, coherent storytelling.">
+    <title>DungeonBrain++ | Neuromorphic Dungeon Master</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="mist mist-1"></div>
+        <div class="mist mist-2"></div>
+        <div class="mist mist-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-left">
+            <div class="logo-icon">🧠</div>
+            <div class="header-title">
+                <h1>DungeonBrain<span class="accent">++</span></h1>
+                <p class="subtitle">Neuromorphic Dungeon Master</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="session-badge" id="session-badge">
+                <span class="pulse-dot"></span>
+                <span id="session-label">No Session</span>
+            </div>
+            <button class="header-btn" id="btn-new" title="New Campaign">⚔️ New</button>
+            <button class="header-btn" id="btn-save" title="Save Campaign" disabled>💾 Save</button>
+            <button class="header-btn" id="btn-toggle-stats" title="Toggle Stats Panel">📊 Stats</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-main">
+        <!-- Story Panel -->
+        <section class="story-panel" id="story-panel">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcome-screen">
+                <div class="welcome-icon">⚔️</div>
+                <h2>Begin Your Adventure</h2>
+                <p>Click <strong>New</strong> to start a campaign. The neuromorphic memory system will track every character, quest, and event — ensuring your story never loses continuity.</p>
+                <button class="btn-primary" id="btn-start-welcome">Start New Campaign</button>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messages-container" style="display:none;">
+                <!-- Messages are injected here -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typing-indicator" style="display:none;">
+                <div class="typing-avatar">🐉</div>
+                <div class="typing-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <span class="typing-label">The Dungeon Master is weaving the tale…</span>
+            </div>
+        </section>
+
+        <!-- Stats Panel -->
+        <aside class="stats-panel" id="stats-panel">
+            <div class="stats-header">
+                <h2>📊 Memory Dashboard</h2>
+                <span class="turn-badge" id="turn-badge">Turn 0</span>
+            </div>
+
+            <!-- Context Amplification - Key Metric -->
+            <div class="stat-card highlight" id="card-context">
+                <div class="stat-card-header">
+                    <span class="stat-icon">🚀</span>
+                    <span class="stat-title">Context Amplification</span>
+                </div>
+                <div class="amplification-display">
+                    <div class="amp-value" id="amp-value">0.00x</div>
+                    <div class="amp-bar-container">
+                        <div class="amp-bar-label"><span>Native LLM</span><span id="native-tokens">8,192</span></div>
+                        <div class="amp-bar native"><div class="amp-bar-fill" style="width:100%"></div></div>
+                        <div class="amp-bar-label"><span>Effective</span><span id="effective-tokens">0</span></div>
+                        <div class="amp-bar effective"><div class="amp-bar-fill" id="effective-bar" style="width:0%"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Stats -->
+            <div class="stat-card" id="card-memory">
+                <div class="stat-card-header">
+                    <span class="stat-icon">🧠</span>
+                    <span class="stat-title">Memory Bank</span>
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-total-memories">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number accent-green" id="stat-permanent">0</span>
+                        <span class="stat-label">Permanent</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number accent-blue" id="stat-transient">0</span>
+                        <span class="stat-label">Transient</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number accent-amber" id="stat-salience">0</span>
+                        <span class="stat-label">Avg Salience</span>
+                    </div>
+                </div>
+                <!-- Memory Era Distribution -->
+                <div class="era-bar" id="era-bar">
+                    <div class="era-segment era-early" id="era-early" style="width:0%" title="Early (turns 1-10)"></div>
+                    <div class="era-segment era-mid" id="era-mid" style="width:0%" title="Mid (turns 11-30)"></div>
+                    <div class="era-segment era-late" id="era-late" style="width:0%" title="Late (turns 30+)"></div>
+                </div>
+                <div class="era-legend">
+                    <span><i class="dot dot-early"></i>Early</span>
+                    <span><i class="dot dot-mid"></i>Mid</span>
+                    <span><i class="dot dot-late"></i>Late</span>
+                </div>
+            </div>
+
+            <!-- Neural Links -->
+            <div class="stat-card" id="card-links">
+                <div class="stat-card-header">
+                    <span class="stat-icon">🔗</span>
+                    <span class="stat-title">Neural Links</span>
+                </div>
+                <div class="stat-grid two-col">
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-links">0</span>
+                        <span class="stat-label">Connections</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-link-strength">0</span>
+                        <span class="stat-label">Avg Strength</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Retrieval Performance -->
+            <div class="stat-card" id="card-retrieval">
+                <div class="stat-card-header">
+                    <span class="stat-icon">📡</span>
+                    <span class="stat-title">Retrieval</span>
+                </div>
+                <div class="stat-grid three-col">
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-retrievals">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number accent-green" id="stat-early-recall">0%</span>
+                        <span class="stat-label">Early Recall</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="stat-avg-retrieved">0</span>
+                        <span class="stat-label">Avg/Turn</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NPCs -->
+            <div class="stat-card" id="card-npcs">
+                <div class="stat-card-header">
+                    <span class="stat-icon">👥</span>
+                    <span class="stat-title">Characters</span>
+                    <span class="stat-count" id="npc-count">0</span>
+                </div>
+                <div class="npc-list" id="npc-list">
+                    <div class="empty-state">No characters encountered yet</div>
+                </div>
+            </div>
+
+            <!-- Quests -->
+            <div class="stat-card" id="card-quests">
+                <div class="stat-card-header">
+                    <span class="stat-icon">📜</span>
+                    <span class="stat-title">Quests</span>
+                    <span class="stat-count" id="quest-count">0</span>
+                </div>
+                <div class="quest-list" id="quest-list">
+                    <div class="empty-state">No quests discovered yet</div>
+                </div>
+            </div>
+
+            <!-- World State -->
+            <div class="stat-card" id="card-world">
+                <div class="stat-card-header">
+                    <span class="stat-icon">🌍</span>
+                    <span class="stat-title">World State</span>
+                </div>
+                <div class="world-slots" id="world-slots">
+                    <div class="slot-item"><span class="slot-key">Location</span><span class="slot-val" id="slot-location">Unknown</span></div>
+                    <div class="slot-item"><span class="slot-key">Time</span><span class="slot-val" id="slot-time">—</span></div>
+                    <div class="slot-item"><span class="slot-key">Goal</span><span class="slot-val" id="slot-goal">—</span></div>
+                </div>
+            </div>
+
+            <!-- FAISS Index -->
+            <div class="stat-card compact" id="card-engine">
+                <div class="stat-card-header">
+                    <span class="stat-icon">⚙️</span>
+                    <span class="stat-title">Engine</span>
+                </div>
+                <div class="engine-stats">
+                    <span>Model: <strong>Llama 3.1 8B</strong></span>
+                    <span>Embeddings: <strong id="stat-emb-dim">384</strong>d</span>
+                    <span>FAISS Index: <strong id="stat-faiss">0</strong> vectors</span>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Input Bar -->
+    <footer id="input-bar">
+        <div class="input-wrapper">
+            <span class="input-icon">⚔️</span>
+            <input type="text" id="player-input" placeholder="What do you do?" disabled autocomplete="off" maxlength="2000">
+            <button class="send-btn" id="btn-send" disabled title="Send (Enter)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </div>
+        <div class="input-hints">
+            <span>Press <kbd>Enter</kbd> to send</span>
+            <span>•</span>
+            <span>Press <kbd>Ctrl+S</kbd> to save</span>
+        </div>
+    </footer>
+
+    <script src="/app.js"></script>
+</body>
+</html>

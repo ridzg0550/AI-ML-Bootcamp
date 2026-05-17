@@ -668,8 +668,10 @@ def extract_npcs_improved(text: str, dialogue_context: str = "") -> List[str]:
 # DUNGEONBRAIN++ MAIN SYSTEM - FIXED
 
 class DungeonBrainPlus:
-    def __init__(self, api_key: str = GROQ_API_KEY):
+    def __init__(self, api_key: str = GROQ_API_KEY, persist_dir: str = None):
         print("\n Initializing DungeonBrain++...")
+        self.persist_dir = persist_dir or PERSIST_DIR
+        os.makedirs(self.persist_dir, exist_ok=True)
         self.llm = GroqLLMEngine(api_key=api_key)
         
         self.memory = NeuroEventMemory()
@@ -685,7 +687,7 @@ class DungeonBrainPlus:
         print("✅ DungeonBrain++ ready!\n")
     
     def _persist_prefix(self) -> str:
-        return os.path.join(PERSIST_DIR, "dungeonbrain")
+        return os.path.join(self.persist_dir, "dungeonbrain")
     
     def save_state(self):
         prefix = self._persist_prefix()
@@ -775,17 +777,19 @@ class DungeonBrainPlus:
         
      
         system_prompt = (
-            "You are a concise Dungeon Master. Rules:\n"
-            "1. Respond directly to the player's action/question\n"
-            "2. Be specific - use names, describe outcomes\n"
-            "3. Keep responses 2-3 sentences maximum\n"
-            "4. DON'T repeat previous descriptions\n"
-            "5. If player asks an NPC something, have the NPC actually answer\n"
-            "6. Move the story forward with each response\n\n"
+            "You are a masterful, concise Dungeon Master running an immersive fantasy RPG. Rules:\n"
+            "1. Respond directly to the player's action or question with vivid, specific detail\n"
+            "2. NEVER contradict established NPC traits, relationships, or quest facts from context\n"
+            "3. Use character names consistently — if an NPC was introduced, refer to them by name\n"
+            "4. Keep responses 2-3 sentences maximum — every word must advance the narrative\n"
+            "5. If the player addresses an NPC, write that NPC's dialogue in-character\n"
+            "6. Reference past events naturally when they connect to the current moment\n"
+            "7. Maintain world consistency: locations, time of day, weather, party composition\n"
+            "8. Create narrative tension — hint at consequences, foreshadow, build atmosphere\n\n"
             "Context:"
         )
         
-        full_prompt = f"{system_prompt}\n\n{context}\n\nPlayer: {user_input}\n\nDungeon Master (respond briefly and directly):"
+        full_prompt = f"{system_prompt}\n\n{context}\n\nPlayer: {user_input}\n\nDungeon Master (respond in-character, briefly and directly):"
         
         response = self.llm.generate(full_prompt, max_new_tokens=200, temperature=0.75)
         
@@ -829,7 +833,26 @@ class DungeonBrainPlus:
         npcs = extract_npcs_improved(combined, recent_dialogue)
         for npc_name in npcs:
             try:
-                self.npc_memory.update_npc(npc_name, self.turn_count)
+                # Extract facts about this NPC from the combined text
+                facts = []
+                for sentence in re.split(r'[.!?]+', combined):
+                    if npc_name.lower() in sentence.lower() and len(sentence.strip()) > 15:
+                        fact = sentence.strip()[:80]
+                        if fact:
+                            facts.append(fact)
+                # Detect relationship hints
+                relationship = None
+                rel_keywords = {
+                    'friendly': ['friend', 'ally', 'helps', 'kind', 'smiles', 'welcomes'],
+                    'hostile': ['enemy', 'attacks', 'hostile', 'threatens', 'snarls', 'angry'],
+                    'allied': ['joins', 'alliance', 'together', 'partner', 'sworn'],
+                }
+                low_combined = combined.lower()
+                for rel, keywords in rel_keywords.items():
+                    if any(kw in low_combined for kw in keywords):
+                        relationship = rel
+                        break
+                self.npc_memory.update_npc(npc_name, self.turn_count, facts=facts[:2], relationship=relationship)
                 self.metrics.log_npc_interaction(self.turn_count, npc_name, consistent=True)
             except Exception:
                 continue
@@ -841,7 +864,12 @@ class DungeonBrainPlus:
             "objective:",
             "i give you the quest",
             "accept this quest",
-            "your mission is"
+            "your mission is",
+            "you must",
+            "your task is",
+            "seek out",
+            "find the",
+            "retrieve the"
         ]
         
         has_explicit_quest = any(marker in combined.lower() for marker in explicit_quest_markers)
@@ -849,7 +877,9 @@ class DungeonBrainPlus:
         if has_explicit_quest:
             quest_patterns = [
                 r"(?:your quest is to|quest:|mission:|objective:)\s+([a-z][a-z\s]{20,80})(?:\.|!|\?|$)",
-                r"(?:i give you the quest to|your mission is to)\s+([a-z][a-z\s]{20,80})(?:\.|!|\?|$)"
+                r"(?:i give you the quest to|your mission is to)\s+([a-z][a-z\s]{20,80})(?:\.|!|\?|$)",
+                r"(?:you must|your task is to|you need to)\s+([a-z][a-z\s]{20,80})(?:\.|!|\?|$)",
+                r"(?:seek out|find the|retrieve the|deliver the)\s+([a-z][a-z\s]{20,80})(?:\.|!|\?|$)"
             ]
             
             for pattern in quest_patterns:
@@ -902,6 +932,83 @@ class DungeonBrainPlus:
         print(f"\nActive Quests:\n{self.quest_log.get_active_quests()}")
         print(f"\nKnown NPCs:\n{self.npc_memory.list_all()}")
         print("="*60 + "\n")
+    
+    def get_memory_stats(self) -> Dict:
+        """Complete memory statistics for the frontend dashboard"""
+        total_memory_tokens = sum(len(text) // 4 for text in self.memory.texts)
+        native_context = 8192  # llama-3.1-8b-instant context window
+        amplification = round(total_memory_tokens / max(1, native_context), 2)
+        
+        permanent_count = sum(1 for p in self.memory.is_permanent if p)
+        transient_count = len(self.memory.texts) - permanent_count
+        avg_salience = round(float(np.mean(self.memory.salience)), 3) if self.memory.salience else 0.0
+        
+        total_links = sum(len(v) for v in self.memory.links.values())
+        avg_link_strength = 0.0
+        if total_links > 0:
+            all_weights = [w for neighbors in self.memory.links.values() for w in neighbors.values()]
+            avg_link_strength = round(float(np.mean(all_weights)), 4)
+        
+        early = sum(1 for t in self.memory.turn_numbers if t <= 10)
+        mid = sum(1 for t in self.memory.turn_numbers if 10 < t <= 30)
+        late = sum(1 for t in self.memory.turn_numbers if t > 30)
+        
+        npc_count = len(self.npc_memory.npcs)
+        relationships = {}
+        npc_list = []
+        for name, data in self.npc_memory.npcs.items():
+            rel = data.get('relationship', 'neutral')
+            relationships[rel] = relationships.get(rel, 0) + 1
+            npc_list.append({
+                "name": name,
+                "relationship": rel,
+                "first_met": data.get('first_met_turn'),
+                "last_seen": data.get('last_seen_turn'),
+                "interactions": data.get('dialogue_count', 0),
+                "facts": data.get('key_facts', [])
+            })
+        
+        active_quests = sum(1 for q in self.quest_log.quests.values() if q['status'] == 'active')
+        completed_quests = sum(1 for q in self.quest_log.quests.values() if q['status'] == 'completed')
+        quest_list = []
+        for qid, q in self.quest_log.quests.items():
+            quest_list.append({
+                "id": qid,
+                "name": q['name'],
+                "description": q['description'],
+                "status": q['status'],
+                "started_turn": q['started_turn'],
+                "updates": len(q.get('updates', []))
+            })
+        
+        metrics_stats = self.metrics.get_stats()
+        
+        return {
+            "turn_count": self.turn_count,
+            "total_memories": len(self.memory.texts),
+            "permanent_memories": permanent_count,
+            "transient_memories": transient_count,
+            "total_memory_tokens": total_memory_tokens,
+            "native_context_tokens": native_context,
+            "effective_context_tokens": total_memory_tokens,
+            "context_amplification": amplification,
+            "avg_salience": avg_salience,
+            "total_links": total_links,
+            "avg_link_strength": avg_link_strength,
+            "memory_by_era": {"early": early, "mid": mid, "late": late},
+            "npc_count": npc_count,
+            "npc_relationships": relationships,
+            "npc_list": npc_list,
+            "active_quests": active_quests,
+            "completed_quests": completed_quests,
+            "total_quests": len(self.quest_log.quests),
+            "quest_list": quest_list,
+            "retrieval_stats": metrics_stats,
+            "slot_memory": self.slots.slots,
+            "embedding_dimension": self.memory.emb_dim,
+            "faiss_index_size": self.memory.index.ntotal if self.memory.index else 0,
+            "dialogue_history": self.dialogue_history[-10:]
+        }
 
 
 # INTERACTIVE LOOP
