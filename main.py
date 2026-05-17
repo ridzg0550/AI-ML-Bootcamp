@@ -570,22 +570,27 @@ class GroqLLMEngine:
         print(f" Using Groq API with {model_name}")
     
     def generate(self, prompt: str, max_new_tokens: int = MAX_NEW_TOKENS, 
-                 temperature: float = 0.7, **kwargs) -> str:
-        """Generate with better stopping and post-processing"""
+                 temperature: float = 0.7, system_message: str = None, **kwargs) -> str:
+        """Generate with proper system/user role separation for better instruction-following"""
         try:
+            messages = []
+            if system_message:
+                messages.append({"role": "system", "content": system_message})
+            messages.append({"role": "user", "content": prompt})
+            
             response = self.client.chat.completions.create(
                 model=self.model_name,
-                messages=[{"role": "user", "content": prompt}],
+                messages=messages,
                 temperature=temperature,
                 max_tokens=max_new_tokens,
                 top_p=0.92,
-                frequency_penalty=0.3,
-                presence_penalty=0.2,
+                frequency_penalty=0.6,
+                presence_penalty=0.4,
                 stop=None
             )
             
             text = response.choices[0].message.content.strip()
-            text = self._truncate_at_sentence(text, max_sentences=3)
+            text = self._truncate_at_sentence(text, max_sentences=5)
             
             return text
             
@@ -758,7 +763,7 @@ class DungeonBrainPlus:
                 blocks.append(f"=== Known NPCs ===\n" + "\n".join(npc_contexts))
         
         if self.dialogue_history:
-            recent = self.dialogue_history[-min(2, CONVERSATION_HISTORY_LIMIT):]
+            recent = self.dialogue_history[-min(4, CONVERSATION_HISTORY_LIMIT):]
             blocks.append(f"=== Recent Conversation ===\n" + "\n".join(recent))
         
         return "\n\n".join(blocks), retrieved_turns
@@ -777,21 +782,20 @@ class DungeonBrainPlus:
         
      
         system_prompt = (
-            "You are a masterful, concise Dungeon Master running an immersive fantasy RPG. Rules:\n"
-            "1. Respond directly to the player's action or question with vivid, specific detail\n"
-            "2. NEVER contradict established NPC traits, relationships, or quest facts from context\n"
-            "3. Use character names consistently — if an NPC was introduced, refer to them by name\n"
-            "4. Keep responses 2-3 sentences maximum — every word must advance the narrative\n"
-            "5. If the player addresses an NPC, write that NPC's dialogue in-character\n"
-            "6. Reference past events naturally when they connect to the current moment\n"
-            "7. Maintain world consistency: locations, time of day, weather, party composition\n"
-            "8. Create narrative tension — hint at consequences, foreshadow, build atmosphere\n\n"
-            "Context:"
+            "You are a masterful Dungeon Master running an immersive fantasy RPG.\n\n"
+            "RULES:\n"
+            "- ALWAYS advance the story. Never stall, repeat yourself, or give vague non-answers.\n"
+            "- When NPCs speak, write their actual dialogue in quotes. They must respond meaningfully to what the player says.\n"
+            "- NEVER contradict established facts from the context provided.\n"
+            "- Use character names consistently. Remember who the player has met and what has happened.\n"
+            "- Keep responses 3-5 vivid sentences. Describe what happens, what the player sees/hears, and present a clear next choice or situation.\n"
+            "- Create narrative tension — introduce consequences, moral dilemmas, and surprises.\n"
+            "- If the player tries to talk to someone, that character MUST speak back with personality and purpose."
         )
         
-        full_prompt = f"{system_prompt}\n\n{context}\n\nPlayer: {user_input}\n\nDungeon Master (respond in-character, briefly and directly):"
+        user_prompt = f"WORLD CONTEXT:\n{context}\n\nPLAYER ACTION: {user_input}"
         
-        response = self.llm.generate(full_prompt, max_new_tokens=200, temperature=0.75)
+        response = self.llm.generate(user_prompt, max_new_tokens=350, temperature=0.8, system_message=system_prompt)
         
         dialogue_entry = f"[Turn {self.turn_count}] Player: {user_input}\nDM: {response}"
         self.dialogue_history.append(dialogue_entry)
