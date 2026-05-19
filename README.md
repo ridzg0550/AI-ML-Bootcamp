@@ -1,113 +1,118 @@
-🌟Neuromorphic Memory Architecture for Interactive Narrative Generation
+<div align="center">
+  
+# 🧠 DungeonBrain++ 
+### Neuromorphic Memory-Augmented Dungeon Master
 
-A biologically-inspired memory system for long-horizon interactive storytelling in text-based RPGs. This architecture integrates neuromorphic episodic memory with transformer-based LLMs to maintain coherent narratives across extended conversations spanning multiple sessions.
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React/Vite](https://img.shields.io/badge/Frontend-HTML/JS/CSS-f7df1e?style=for-the-badge)](https://developer.mozilla.org/)
+[![Groq](https://img.shields.io/badge/LLM-Groq_Cloud-f55036?style=for-the-badge)](https://groq.com/)
+[![FAISS](https://img.shields.io/badge/Vector_DB-FAISS-blue?style=for-the-badge)](https://faiss.ai/)
 
+A biologically-inspired memory system for long-horizon interactive storytelling in text-based RPGs.
+</div>
 
-🌟 Key Features
+---
 
-Neuromorphic Event Memory: Salience-based episodic storage with attention-driven retrieval
+## 🌟 Overview
 
-Associative Memory Networks: Spreading activation enables recall of narratively connected events
+**DungeonBrain++** integrates neuromorphic episodic memory with transformer-based LLMs to maintain coherent narratives across extended conversations spanning multiple sessions. It acts as an advanced, AI-driven Dungeon Master capable of managing game state, remembering past player actions, and producing creative and context-aware storytelling.
 
-Multi-Factor Retrieval: Combines semantic similarity, temporal recency, salience, and permanence scoring
+## ✨ Key Features
 
-Memory Consolidation: Biologically-inspired link pruning and strengthening
+- 🧠 **Neuromorphic Event Memory**: Salience-based episodic storage with attention-driven retrieval to focus on what truly matters in the story.
+- 🔗 **Associative Memory Networks**: Spreading activation enables recall of narratively connected events, mimicking human memory recall.
+- 🎯 **Multi-Factor Retrieval**: Combines semantic similarity, temporal recency, salience, and permanence scoring for accurate memory fetching.
+- 🧹 **Memory Consolidation**: Biologically-inspired link pruning and strengthening to prevent memory bloat and optimize context windows.
+- 🎭 **Specialized Subsystems**: Dedicated state tracking for **NPCs** (relationships & stats), **Quest Logs**, and **World State**.
+- 💾 **Session Persistence**: Complete state save/load mechanisms to support multi-session, long-running campaigns.
+- ⚡ **Lightning Fast AI**: Powered by **Groq** for instantaneous LLM inference, ensuring real-time interactivity.
 
-Specialized Subsystems: Dedicated tracking for NPCs, quests, and world state
+## 🏗️ Architecture
 
-Session Persistence: Complete state save/load for multi-session campaigns
+```mermaid
+graph LR
+    A[Player Input] --> B(Query Encoding)
+    B --> C{Memory Retrieval}
+    C -->|Neuromorphic Memory| D(FAISS Embeddings)
+    C -->|Subsystems| E(NPC/Quest State)
+    D --> F[Context Assembly]
+    E --> F
+    F --> G((Groq LLM Generation))
+    G --> H[Story Output & State Update]
+```
 
-Deterministic Execution: Seeded randomness ensures reproducible behavior
+### Core Components
+1. **Neuromorphic Event Memory**: Uses 384-dimensional semantic embeddings (Sentence-BERT) with FAISS indexing for efficient retrieval.
+2. **NPC Memory System**: Structured character profiles with temporal metadata, tracked relationship states, and Named Entity Recognition (NER).
+3. **Quest Log**: Regex-based active quest detection with state management (active, completed, failed).
+4. **Slot Memory**: Lightweight environmental context tracking (location, time, party, inventory).
 
+## 🚀 Tech Stack
 
-🏗️ Architecture Overview
+- **Backend**: Python 3.8+, FastAPI, Uvicorn
+- **AI/ML**: Groq API, Sentence-Transformers, spaCy, FAISS
+- **Frontend**: Vanilla HTML, CSS (Glassmorphism UI), JavaScript
 
-Player Input → Query Encoding → Memory Retrieval → Context Assembly → LLM Generation
+## 💻 Installation & Setup
 
- Memory Retrieval :-
-            1. Neuromorphic Event Memory            2.Specialized Subsystems
-            • Vector Embeddings (FAISS)             • NPC Memory
-            • Salience Filtering                    • Quest Log
-            • Associative Linking                   • Slot Memory
-            • Consolidation                         • State Management
+Follow these steps to run DungeonBrain++ locally on your machine.
 
-                                
+### 1. Clone the repository
+```bash
+git clone https://github.com/your-username/AI-ML-Bootcamp.git
+cd AI-ML-Bootcamp
+```
 
+### 2. Set up the Python Environment
+```bash
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
-🌟Core Components
+# Install dependencies
+pip install -r backend/requirements.txt
+python -m spacy download en_core_web_sm
+```
 
-1.Neuromorphic Event Memory
+### 3. Environment Variables
+Create a `.env` file in the root directory and add your Groq API key:
+```env
+GROQ_API_KEY=your_api_key_here
+```
 
-384-dimensional semantic embeddings (Sentence-BERT)
+### 4. Run the Application
+Start the FastAPI server which also serves the frontend:
+```bash
+uvicorn backend.app:app --reload
+```
 
-FAISS indexing for efficient retrieval
+The application will be available at **`http://localhost:8000`**.
 
-Salience-based filtering prevents memory bloat
+---
 
-Bidirectional associative links enable graph-based chaining
+## 📂 Project Structure
 
+```text
+AI-ML-Bootcamp/
+├── .env                        # Environment variables
+├── backend/                    # FastAPI backend
+│   ├── app.py                  # Server entry point
+│   ├── routes.py               # API endpoints
+│   ├── schemas.py              # Pydantic models
+│   ├── session_manager.py      # Core memory architecture logic
+│   └── requirements.txt        # Python dependencies
+├── frontend/                   # UI Assets
+│   ├── index.html              # Main HTML entry
+│   ├── styles.css              # Glassmorphic UI styles
+│   └── app.js                  # Frontend logic
+├── main.py                     # Original CLI interface / core logic
+└── README.md                   # This file!
+```
 
-2.NPC Memory System
+## 🎥 Demos
 
-Structured character profiles with temporal metadata
+- [Sample Video 1](https://drive.google.com/file/d/1lzY8X3Ukoo5yfsI393hA2RkdWIUhcGKE/view?usp=sharing)
+- [Sample Video 2](https://drive.google.com/file/d/1C1Xg_7TE7WVot6qpEWD1_niWxcJOD4c_/view?usp=sharing)
 
-Relationship state tracking (friendly, neutral, hostile, allied)
-
-Named Entity Recognition for automatic character detection
-
-
-3.Quest Log
-
-Regex-based quest detection with validation
-
-State management (active, completed, failed)
-
-Prevents false positives through semantic filtering
-
-
-4.Slot Memory
-
-Lightweight environmental context (location, time, party, inventory)
-
-Regex extraction for state changes
-
-
-🌟Prerequisites
-
- bash
-Python 3.8+
-pip
-
-🌟Required Dependencies
-
-sentence-transformers==2.2.2
-
-faiss-cpu==1.7.4
-
-spacy==3.5.0
-
-groq==0.4.0
-
-numpy==1.24.3
-
-python-dotenv==1.0.0
-
-🌟How To Run
-
-1.install dependencies
-
-2.run this command on terminal to set your API key-
-command-export GROQ_API_KEY=‘your_api_key’
-
-3.run main.py file
-
-4.enjoy your game!
-
-SAMPLE VIDEO LINK 1:- https://drive.google.com/file/d/1lzY8X3Ukoo5yfsI393hA2RkdWIUhcGKE/view?usp=sharing
-
-SAMPLE VIDEO LINK 2:-https://drive.google.com/file/d/1C1Xg_7TE7WVot6qpEWD1_niWxcJOD4c_/view?usp=sharing
-
-
-📄 License
+## 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
-            
