@@ -4,11 +4,14 @@
 ### Neuromorphic Memory-Augmented Dungeon Master
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![React/Vite](https://img.shields.io/badge/Frontend-HTML/JS/CSS-f7df1e?style=for-the-badge)](https://developer.mozilla.org/)
+[![Sentence-BERT](https://img.shields.io/badge/Embeddings-Sentence--BERT-FF9D00?style=for-the-badge)](https://sbert.net/)
+[![spaCy](https://img.shields.io/badge/NLP-spaCy-09A3D5?style=for-the-badge&logo=spacy&logoColor=white)](https://spacy.io/)
 [![Groq](https://img.shields.io/badge/LLM-Groq_Cloud-f55036?style=for-the-badge)](https://groq.com/)
 [![FAISS](https://img.shields.io/badge/Vector_DB-FAISS-blue?style=for-the-badge)](https://faiss.ai/)
 
 A biologically-inspired memory system for long-horizon interactive storytelling in text-based RPGs.
+
+<img src="frontend/assets/demo_ui.png" alt="DungeonBrain++ UI" width="800"/>
 </div>
 
 ---
