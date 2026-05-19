@@ -10,8 +10,6 @@
 [![FAISS](https://img.shields.io/badge/Vector_DB-FAISS-blue?style=for-the-badge)](https://faiss.ai/)
 
 A biologically-inspired memory system for long-horizon interactive storytelling in text-based RPGs.
-
-<img src="frontend/assets/demo_ui.png" alt="DungeonBrain++ UI" width="800"/>
 </div>
 
 ---
