@@ -1,6 +1,6 @@
 <div align="center">
   
-# 🧠 DungeonBrain++ 
+# DungeonBrain++ 
 ### Neuromorphic Memory-Augmented Dungeon Master
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
@@ -14,21 +14,21 @@ A biologically-inspired memory system for long-horizon interactive storytelling 
 
 ---
 
-## 🌟 Overview
+## Overview
 
 **DungeonBrain++** integrates neuromorphic episodic memory with transformer-based LLMs to maintain coherent narratives across extended conversations spanning multiple sessions. It acts as an advanced, AI-driven Dungeon Master capable of managing game state, remembering past player actions, and producing creative and context-aware storytelling.
 
-## ✨ Key Features
+## Key Features
 
-- 🧠 **Neuromorphic Event Memory**: Salience-based episodic storage with attention-driven retrieval to focus on what truly matters in the story.
-- 🔗 **Associative Memory Networks**: Spreading activation enables recall of narratively connected events, mimicking human memory recall.
-- 🎯 **Multi-Factor Retrieval**: Combines semantic similarity, temporal recency, salience, and permanence scoring for accurate memory fetching.
-- 🧹 **Memory Consolidation**: Biologically-inspired link pruning and strengthening to prevent memory bloat and optimize context windows.
-- 🎭 **Specialized Subsystems**: Dedicated state tracking for **NPCs** (relationships & stats), **Quest Logs**, and **World State**.
-- 💾 **Session Persistence**: Complete state save/load mechanisms to support multi-session, long-running campaigns.
-- ⚡ **Lightning Fast AI**: Powered by **Groq** for instantaneous LLM inference, ensuring real-time interactivity.
+-  **Neuromorphic Event Memory**: Salience-based episodic storage with attention-driven retrieval to focus on what truly matters in the story.
+-  **Associative Memory Networks**: Spreading activation enables recall of narratively connected events, mimicking human memory recall.
+-  **Multi-Factor Retrieval**: Combines semantic similarity, temporal recency, salience, and permanence scoring for accurate memory fetching.
+-  **Memory Consolidation**: Biologically-inspired link pruning and strengthening to prevent memory bloat and optimize context windows.
+-  **Specialized Subsystems**: Dedicated state tracking for **NPCs** (relationships & stats), **Quest Logs**, and **World State**.
+-  **Session Persistence**: Complete state save/load mechanisms to support multi-session, long-running campaigns.
+-  **Lightning Fast AI**: Powered by **Groq** for instantaneous LLM inference, ensuring real-time interactivity.
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 graph LR
@@ -48,13 +48,13 @@ graph LR
 3. **Quest Log**: Regex-based active quest detection with state management (active, completed, failed).
 4. **Slot Memory**: Lightweight environmental context tracking (location, time, party, inventory).
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Backend**: Python 3.8+, FastAPI, Uvicorn
 - **AI/ML**: Groq API, Sentence-Transformers, spaCy, FAISS
 - **Frontend**: Vanilla HTML, CSS (Glassmorphism UI), JavaScript
 
-## 💻 Installation & Setup
+## Installation & Setup
 
 Follow these steps to run DungeonBrain++ locally on your machine.
 
@@ -91,7 +91,7 @@ The application will be available at **`http://localhost:8000`**.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 AI-ML-Bootcamp/
@@ -110,10 +110,10 @@ AI-ML-Bootcamp/
 └── README.md                   # This file!
 ```
 
-## 🎥 Demos
+## Demos
 
 - [Sample Video 1](https://drive.google.com/file/d/1lzY8X3Ukoo5yfsI393hA2RkdWIUhcGKE/view?usp=sharing)
 - [Sample Video 2](https://drive.google.com/file/d/1C1Xg_7TE7WVot6qpEWD1_niWxcJOD4c_/view?usp=sharing)
 
-## 📄 License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
